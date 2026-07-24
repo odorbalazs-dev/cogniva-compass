@@ -22,3 +22,10 @@ test("privacy and non-clinical boundaries are explicit",()=>{
   assert.match(readme,/not an IQ test/i);
   assert.match(readme,/answers and results stay in browser memory/i);
 });
+
+test("Webflow embed references only the independent Cogniva service",()=>{
+  const embed=fs.readFileSync(new URL("../webflow/cogniva-compass-embed.html",import.meta.url),"utf8");
+  assert.match(embed,/cogniva-compass-production\.up\.railway\.app\/app\.js/);
+  assert.match(embed,/cogniva-compass-production\.up\.railway\.app\/styles\.css/);
+  assert.doesNotMatch(embed,/neuromap/i);
+});
