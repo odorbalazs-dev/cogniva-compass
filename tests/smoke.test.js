@@ -25,7 +25,10 @@ test("privacy and non-clinical boundaries are explicit",()=>{
 
 test("Webflow embed references only the independent Cogniva service",()=>{
   const embed=fs.readFileSync(new URL("../webflow/cogniva-compass-embed.html",import.meta.url),"utf8");
-  assert.match(embed,/cogniva-compass-production\.up\.railway\.app\/app\.js/);
-  assert.match(embed,/cogniva-compass-production\.up\.railway\.app\/styles\.css/);
+  const loader=fs.readFileSync(new URL("../public/webflow-loader.js",import.meta.url),"utf8");
+  assert.match(embed,/cogniva-compass-production\.up\.railway\.app\/webflow-loader\.js/);
+  assert.match(loader,/\/app\.js\?v=/);
+  assert.match(loader,/\/styles\.css\?v=/);
+  assert.ok(embed.length < 300, "Webflow embed should stay small");
   assert.doesNotMatch(embed,/neuromap/i);
 });

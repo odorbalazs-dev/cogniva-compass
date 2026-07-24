@@ -17,7 +17,7 @@ Open `http://localhost:3000`. Health check: `/health`.
 
 ## Webflow
 
-Create a blank Webflow page without the default navbar or footer, add a single full-width Embed element and paste the contents of `webflow/cogniva-compass-embed.html`. The embed keeps the Webflow markup small while loading versioned CSS and questionnaire runtime from the independent Railway service.
+Create a blank Webflow page without the default navbar or footer, add a single full-width Embed element and paste the contents of `webflow/cogniva-compass-embed.html`. The Webflow embed is intentionally a one-line external loader. The loader, HTML shell, styles and questionnaire runtime remain version-controlled in GitHub and are served by the independent Railway service.
 
 Webflow page settings should use:
 
