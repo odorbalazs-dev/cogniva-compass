@@ -1,0 +1,266 @@
+.result {
+  max-width: 1080px;
+}
+
+.result > h1 {
+  max-width: none;
+  font-size: clamp(38px, 5vw, 62px);
+}
+
+#resultTitle:focus {
+  outline: 2px solid rgba(23, 107, 135, .45);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+
+.result-overview {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+  margin: 28px 0 36px;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.score-wrap {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.result-overview .score {
+  width: 124px;
+  height: 92px;
+  border: 1px solid rgba(23, 107, 135, .14);
+  border-radius: 12px;
+}
+
+.result-summary h2,
+.how-to h2,
+.domain-analysis h2,
+.result-note h2 {
+  margin-bottom: 14px;
+  font-size: clamp(26px, 3vw, 36px);
+}
+
+.result-summary > :last-child,
+.result-highlights p,
+.domain-result p,
+.result-note p {
+  color: var(--muted);
+}
+
+.result-band,
+.domain-band {
+  margin: 0 0 8px;
+  color: var(--green) !important;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.result-lead {
+  color: var(--ink) !important;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.result-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+.result-highlights.balanced {
+  grid-template-columns: 1fr;
+}
+
+.result-highlights article {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--blue);
+  border-radius: 8px;
+  background: var(--white);
+}
+
+.result-highlights article:nth-child(2) {
+  border-top-color: var(--coral);
+}
+
+.result-highlights span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.result-highlights strong {
+  font: 700 22px/1.3 Manrope, sans-serif;
+}
+
+.result-highlights p {
+  margin-bottom: 0;
+}
+
+.how-to {
+  margin: 44px 0;
+  padding: clamp(24px, 4vw, 38px);
+  border-radius: 10px;
+  background: var(--sky);
+}
+
+.how-to ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.how-to li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 18px;
+  border: 1px solid rgba(23, 107, 135, .14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .72);
+}
+
+.how-to li > :first-child {
+  color: var(--green);
+  font-weight: 800;
+}
+
+.domain-analysis {
+  margin-top: 48px;
+}
+
+.domain-results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.domain-result {
+  padding: clamp(22px, 3vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--white);
+}
+
+.domain-result-head {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.domain-result-head h3 {
+  margin-bottom: 12px;
+  font-size: 23px;
+}
+
+.domain-result-head > strong {
+  color: var(--blue);
+  font: 800 26px/1 Manrope, sans-serif;
+  white-space: nowrap;
+}
+
+.domain-result-head small {
+  font-size: 12px;
+}
+
+.domain-bar {
+  margin-bottom: 18px;
+}
+
+.next-step {
+  display: grid;
+  gap: 5px;
+  margin-top: 20px;
+  padding: 16px;
+  border-left: 4px solid var(--coral);
+  border-radius: 5px;
+  background: #fff8f5;
+}
+
+.next-step strong {
+  color: var(--coral);
+  font-size: 13px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.next-step span {
+  color: var(--ink);
+}
+
+.result-note {
+  margin-top: 40px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.result-note h2 {
+  font-size: 22px;
+}
+
+.result-note p {
+  margin-bottom: 0;
+}
+
+[dir="rtl"] .next-step {
+  border-right: 4px solid var(--coral);
+  border-left: 0;
+}
+
+@media (max-width: 800px) {
+  .result-overview {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .score-wrap {
+    justify-items: start;
+  }
+
+  .result-highlights,
+  .domain-results,
+  .how-to ul {
+    grid-template-columns: 1fr;
+  }
+
+  .result-highlights article,
+  .domain-result {
+    padding: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .result {
+    padding-top: 46px;
+  }
+
+  .result-overview,
+  .how-to {
+    padding: 20px;
+  }
+
+  .domain-result-head {
+    gap: 12px;
+  }
+}

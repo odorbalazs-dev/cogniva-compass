@@ -4,7 +4,7 @@
   if (window.COGNIVA_COMPASS_WEBFLOW_LOADED) return;
   window.COGNIVA_COMPASS_WEBFLOW_LOADED = true;
 
-  const VERSION = "20260724-loader-v1";
+  const VERSION = "20260725-results-v5";
   const BASE_URL = "https://cogniva-compass-production.up.railway.app";
   const loaderScript = document.currentScript;
 
@@ -17,6 +17,17 @@
     document.head.appendChild(link);
   }
 
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = false;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
+
   function mount() {
     if (document.getElementById("cognivaCompassRoot")) return;
 
@@ -25,6 +36,7 @@
       "cogniva-compass-fonts"
     );
     addStylesheet(`${BASE_URL}/styles.css?v=${VERSION}`, "cogniva-compass-styles");
+    addStylesheet(`${BASE_URL}/result-styles.css?v=${VERSION}`, "cogniva-compass-result-styles");
 
     const root = document.createElement("div");
     root.id = "cognivaCompassRoot";
@@ -46,13 +58,14 @@
     const mountPoint = loaderScript && loaderScript.parentElement;
     (mountPoint || document.body).appendChild(root);
 
-    const runtime = document.createElement("script");
-    runtime.src = `${BASE_URL}/app.js?v=${VERSION}`;
-    runtime.async = true;
-    runtime.onerror = function () {
+    loadScript(`${BASE_URL}/banks/cogniva-banks.v1.js?v=${VERSION}`)
+      .then(function () { return loadScript(`${BASE_URL}/selection-engine.js?v=${VERSION}`); })
+      .then(function () { return loadScript(`${BASE_URL}/result-model.js?v=${VERSION}`); })
+      .then(function () { return loadScript(`${BASE_URL}/result-insights.js?v=${VERSION}`); })
+      .then(function () { return loadScript(`${BASE_URL}/app.js?v=${VERSION}`); })
+      .catch(function () {
       root.innerHTML = "<p role='alert'>Cogniva Compass could not be loaded. Please refresh the page.</p>";
-    };
-    document.body.appendChild(runtime);
+      });
   }
 
   if (document.readyState === "loading") {

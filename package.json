@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "check": "node --check src/server.js && node --check public/app.js && node --check public/webflow-loader.js",
-    "test": "node --test"
+    "build:banks": "node scripts/build-banks.js",
+    "audit:banks": "node scripts/audit-banks.js",
+    "check": "node --check src/server.js && node --check public/app.js && node --check public/selection-engine.js && node --check public/result-model.js && node --check public/result-insights.js && node --check public/webflow-loader.js && node --check scripts/build-banks.js && node --check scripts/audit-banks.js && node --check scripts/bank-builders/cognitive.js && node --check scripts/bank-builders/emotional.js",
+    "test": "node --test",
+    "audit:all": "npm run audit:banks && npm run check && npm test"
   },
   "engines": { "node": ">=20" },
   "dependencies": { "express": "^5.1.0" }
