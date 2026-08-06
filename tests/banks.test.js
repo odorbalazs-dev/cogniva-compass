@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import vm from "node:vm";
 import { auditBanks, COGNITIVE_DOMAINS, EMOTIONAL_DOMAINS, LANGUAGES } from "../scripts/audit-banks.js";
+import { BANK_VERSION } from "../scripts/bank-version.js";
 
 const engineSource = fs.readFileSync(new URL("../public/selection-engine.js", import.meta.url), "utf8");
 
@@ -60,6 +61,7 @@ test("the browser bundle contains both complete versioned banks", () => {
   vm.runInContext(bundle, context, { filename: "cogniva-banks.v1.js" });
   assert.equal(window.COGNIVA_BANKS_V1.tracks.cognitive.items.length, 250);
   assert.equal(window.COGNIVA_BANKS_V1.tracks.emotional.items.length, 250);
+  assert.equal(window.COGNIVA_BANKS_V1.bankVersion, BANK_VERSION);
   assert.deepEqual([...window.COGNIVA_BANKS_V1.languages], LANGUAGES);
   assert.equal(JSON.stringify(window.COGNIVA_BANKS_V1.tracks.cognitive.items), JSON.stringify(built.cognitive));
   assert.equal(JSON.stringify(window.COGNIVA_BANKS_V1.tracks.emotional.items), JSON.stringify(built.emotional));

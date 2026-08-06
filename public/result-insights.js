@@ -13,7 +13,7 @@
         cognitive: [
           "A területeket egymáshoz viszonyítsd; az összpontszám nem IQ-érték.",
           "A kisebb eltéréseket befolyásolhatja a kérdések összetétele, a figyelem, a rutin vagy a tempó.",
-          "Az erősebb területekre támaszkodhatsz, a többi pedig hasznos gyakorlási irányt mutat."
+          "Figyeld meg, hogy a mintázat más helyzetekben is visszatér-e; az eltérések gyakorlási ötleteket adhatnak."
         ],
         emotional: [
           "A pontszámok jelenlegi, önmagadról jelzett szokásokat tükröznek, nem állandó tulajdonságokat.",
@@ -73,7 +73,7 @@
         cognitive: [
           "Compare the areas with one another; the overall score is not an IQ value.",
           "Small differences may reflect the item mix, attention, familiarity or pace.",
-          "Use stronger areas as resources and the others as useful directions for practice."
+          "Notice whether the pattern returns in other situations; differences can suggest ideas for practice."
         ],
         emotional: [
           "Scores reflect current self-reported habits, not permanent traits.",
@@ -133,7 +133,7 @@
         cognitive: [
           "Vergleiche die Bereiche miteinander; der Gesamtwert ist kein IQ-Wert.",
           "Kleine Unterschiede können durch Aufgabenmix, Aufmerksamkeit, Vertrautheit oder Tempo entstehen.",
-          "Nutze stärkere Bereiche als Ressourcen und die anderen als hilfreiche Übungsrichtungen."
+          "Beobachte, ob sich das Muster in anderen Situationen wiederholt; Unterschiede können Anregungen zum Üben geben."
         ],
         emotional: [
           "Die Werte spiegeln aktuell selbst berichtete Gewohnheiten wider, keine unveränderlichen Eigenschaften.",
@@ -193,7 +193,7 @@
         cognitive: [
           "Confronta le aree tra loro; il risultato complessivo non è un valore di QI.",
           "Piccole differenze possono dipendere dal mix di domande, dall'attenzione, dalla familiarità o dal ritmo.",
-          "Usa le aree più forti come risorse e le altre come direzioni utili per esercitarti."
+          "Osserva se lo schema ricompare in altre situazioni; le differenze possono suggerire idee per esercitarti."
         ],
         emotional: [
           "I risultati riflettono abitudini attuali riferite da te, non tratti permanenti.",
@@ -253,7 +253,7 @@
         cognitive: [
           "Compara las áreas entre sí; el resultado global no es un valor de CI.",
           "Las pequeñas diferencias pueden reflejar la combinación de preguntas, la atención, la familiaridad o el ritmo.",
-          "Apóyate en las áreas más fuertes y usa las demás como orientaciones útiles para practicar."
+          "Observa si el patrón se repite en otras situaciones; las diferencias pueden sugerir ideas para practicar."
         ],
         emotional: [
           "Los resultados reflejan hábitos actuales descritos por ti, no rasgos permanentes.",
@@ -313,7 +313,7 @@
         cognitive: [
           "把各领域相互比较；总分不是智商数值。",
           "小幅差异可能来自题目组合、注意力、熟悉程度或作答节奏。",
-          "把较强领域当作资源，把其他领域当作有价值的练习方向。"
+          "留意这种模式是否也会出现在其他情境中；差异可以提供练习思路。"
         ],
         emotional: [
           "分数反映的是你目前自述的习惯，而不是永久特质。",
@@ -373,7 +373,7 @@
         cognitive: [
           "領域どうしを比較して見てください。総合点はIQの数値ではありません。",
           "小さな差は、問題の組み合わせ、注意、慣れ、回答ペースでも変わります。",
-          "高めの領域を資源として生かし、ほかの領域を役立つ練習の方向として捉えましょう。"
+          "同じ傾向が別の状況でも現れるか観察し、違いを練習のヒントとして捉えてください。"
         ],
         emotional: [
           "得点は現在の自己報告による習慣を表し、変わらない性質ではありません。",
@@ -433,7 +433,7 @@
         cognitive: [
           "قارن المجالات ببعضها؛ فالنتيجة الإجمالية ليست درجة ذكاء.",
           "قد تعكس الفروق الصغيرة مزيج الأسئلة أو الانتباه أو الألفة أو سرعة الإجابة.",
-          "استخدم المجالات الأقوى كموارد، وانظر إلى غيرها كاتجاهات مفيدة للتدريب."
+          "لاحظ ما إذا كان النمط يتكرر في مواقف أخرى؛ فقد تقترح الفروق أفكارًا للتدريب."
         ],
         emotional: [
           "تعكس الدرجات عاداتك الحالية كما وصفتها، وليست صفات دائمة.",
@@ -493,7 +493,7 @@
         cognitive: [
           "Porównuj obszary ze sobą; wynik ogólny nie jest wartością IQ.",
           "Niewielkie różnice mogą wynikać z zestawu pytań, uwagi, znajomości zadań lub tempa.",
-          "Korzystaj z mocniejszych obszarów jak z zasobów, a pozostałe traktuj jako pomocne kierunki ćwiczeń."
+          "Sprawdź, czy wzorzec powtarza się w innych sytuacjach; różnice mogą podsunąć pomysły do ćwiczeń."
         ],
         emotional: [
           "Wyniki odzwierciedlają obecne, samodzielnie opisane nawyki, a nie trwałe cechy.",
@@ -553,7 +553,7 @@
         cognitive: [
           "Compare as áreas entre si; o resultado global não é um valor de QI.",
           "Pequenas diferenças podem refletir o conjunto de perguntas, a atenção, a familiaridade ou o ritmo.",
-          "Use as áreas mais fortes como recursos e as restantes como direções úteis para praticar."
+          "Observe se o padrão se repete noutras situações; as diferenças podem sugerir ideias para praticar."
         ],
         emotional: [
           "Os resultados refletem hábitos atuais descritos por si, não traços permanentes.",
@@ -613,7 +613,7 @@
         cognitive: [
           "Comparez les domaines entre eux ; le résultat global n'est pas une valeur de QI.",
           "De petits écarts peuvent refléter le choix des questions, l'attention, la familiarité ou le rythme.",
-          "Appuyez-vous sur les domaines plus forts et voyez les autres comme des pistes d'entraînement utiles."
+          "Observez si cette tendance revient dans d'autres situations ; les écarts peuvent suggérer des idées de pratique."
         ],
         emotional: [
           "Les résultats reflètent des habitudes actuelles que vous avez décrites, pas des traits permanents.",

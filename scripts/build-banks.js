@@ -3,9 +3,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildCognitiveBank } from "./bank-builders/cognitive.js";
 import { buildEmotionalBank } from "./bank-builders/emotional.js";
+import { BANK_VERSION } from "./bank-version.js";
 
 const LANGUAGES = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-const BANK_VERSION = "2026.07.25-v2";
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.resolve(currentDir, "../public/banks");
 const outputFile = path.join(outputDir, "cogniva-banks.v1.js");
