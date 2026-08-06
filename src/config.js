@@ -12,6 +12,11 @@ function boolean(value, fallback = false) {
   return ["1", "true", "yes", "on"].includes(String(value).toLowerCase());
 }
 
+export function resolveAssessmentAccessMode(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  return ["disabled", "preview", "production"].includes(normalized) ? normalized : "disabled";
+}
+
 function integer(value, fallback, min, max) {
   const parsed = Number.parseInt(value, 10);
   if (!Number.isFinite(parsed)) return fallback;
@@ -39,6 +44,7 @@ export const config = Object.freeze({
     process.env.SERVICE_BASE_URL,
     "https://cogniva-compass-production.up.railway.app"
   ),
+  assessmentAccessMode: resolveAssessmentAccessMode(process.env.ASSESSMENT_ACCESS_MODE),
   stripeSecretKey: clean(process.env.STRIPE_SECRET_KEY),
   stripeWebhookSecret: clean(process.env.STRIPE_WEBHOOK_SECRET),
   stripeSinglePriceId: clean(process.env.STRIPE_SINGLE_PRICE_ID, process.env.STRIPE_PRICE_ID),
@@ -108,6 +114,7 @@ export function legalReadiness() {
 
 export function commerceReadiness() {
   const missing = [];
+  if (config.assessmentAccessMode !== "production") missing.push("ASSESSMENT_ACCESS_MODE");
   if (!config.databaseUrl) missing.push("DATABASE_URL");
   if (!config.stripeSecretKey) missing.push("STRIPE_SECRET_KEY");
   if (!config.stripeWebhookSecret) missing.push("STRIPE_WEBHOOK_SECRET");

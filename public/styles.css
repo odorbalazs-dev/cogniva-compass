@@ -108,6 +108,21 @@
   backdrop-filter: blur(14px);
 }
 
+#cognivaCompassRoot .cc-preview-banner {
+  position: sticky;
+  top: 68px;
+  z-index: 79;
+  margin: 0;
+  padding: 8px clamp(18px, 5vw, 72px);
+  border-bottom: 1px solid #ffc48d;
+  background: var(--cc-orange-soft);
+  color: #7f3d00;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+  text-align: center;
+}
+
 #cognivaCompassRoot .cc-brand {
   display: inline-flex;
   align-items: center;

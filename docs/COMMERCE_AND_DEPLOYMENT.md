@@ -68,6 +68,7 @@ Use `.env.example` as the non-secret checklist. Railway supplies `PORT`; do not 
 | `PORT` | Platform | HTTP port; Railway supplies it, local default is `3000` |
 | `APP_BASE_URL` | Verify | Public Webflow origin and Stripe return destination, currently `https://cogniva-compass.webflow.io` |
 | `SERVICE_BASE_URL` | Verify | Railway asset/API origin, currently `https://cogniva-compass-production.up.railway.app` |
+| `ASSESSMENT_ACCESS_MODE` | Yes | `disabled` by default; `preview` permits browser-only pre-launch QA with commerce off; `production` enables the full legal gate only when every approval/readiness condition passes |
 | `DATABASE_URL` | Yes | Railway reference to the linked PostgreSQL service; this is the only listed provider credential Railway can supply through service linking |
 | `DATABASE_SSL` | Conditional | `true` only when the selected connection requires SSL; default `false` |
 | `STRIPE_SECRET_KEY` | Yes | Stripe test/live secret key for the matching deployment mode |
@@ -86,7 +87,7 @@ Use `.env.example` as the non-secret checklist. Railway supplies `PORT`; do not 
 | `POLICY_VERSION` | Yes | Immutable approved version/date; values ending in `-draft` disable checkout |
 | `PRIVACY_VERSION` | Yes | Approved privacy notice version; `-draft` disables checkout |
 | `TERMS_VERSION` | Yes | Approved terms/consumer information version; `-draft` disables checkout |
-| `LEGAL_CONTENT_VERSION` | Yes | Exact approved 11-language consent-bundle version; any value containing `draft` disables assessment start and checkout |
+| `LEGAL_CONTENT_VERSION` | Yes | Exact approved 11-language consent-bundle version; any value containing `draft` disables production assessment start and checkout |
 | `PRIVACY_DOCUMENT_SHA256` | Yes | Lowercase SHA-256 of the exact published privacy text |
 | `TERMS_DOCUMENT_SHA256` | Yes | Lowercase SHA-256 of the exact published terms text |
 | `LEGAL_CONSENT_SECRET` | Yes | Random server-only secret of at least 32 bytes used for tamper-evident consent proof |
@@ -110,7 +111,11 @@ Use `.env.example` as the non-secret checklist. Railway supplies `PORT`; do not 
 | `OPENAI_API_KEY` | Only for AI | Server-side API key; never expose it to Webflow/browser code |
 | `OPENAI_REPORT_MODEL` | Only for AI | Explicitly approved and evaluated model ID; there is intentionally no runtime default |
 
-`commerceReady` requires the database URL, Stripe secret/webhook secret and both Price IDs, Resend API key/webhook secret/sender, all public legal/support URLs, controller/contact fields, document hashes, a sufficiently long legal-consent secret and non-draft policy/privacy/terms/localized-content versions. `LEGAL_CONTENT_VERSION` must exactly match `window.COGNIVA_LEGAL_CONTENT_V1.version`; the API rejects stale or different localized copy. `/api/config` must keep checkout disabled unless both Prices pass their exact package contracts. The public label, amount, currency and tax behavior are derived from those verified Stripe Prices; there is no browser-supplied amount or separate price-label variable. A technical `true` still does not replace owner, legal or tax sign-off.
+`commerceReady` requires `ASSESSMENT_ACCESS_MODE=production`, the database URL, Stripe secret/webhook secret and both Price IDs, Resend API key/webhook secret/sender, all public legal/support URLs, controller/contact fields, document hashes, a sufficiently long legal-consent secret and non-draft policy/privacy/terms/localized-content versions. `LEGAL_CONTENT_VERSION` must exactly match `window.COGNIVA_LEGAL_CONTENT_V1.version`; the API rejects stale or different localized copy. `/api/config` must keep checkout disabled unless both Prices pass their exact package contracts. The public label, amount, currency and tax behavior are derived from those verified Stripe Prices; there is no browser-supplied amount or separate price-label variable. A technical `true` still does not replace owner, legal or tax sign-off.
+
+For pre-launch browser QA, set `ASSESSMENT_ACCESS_MODE=preview` only in the intended staging Railway environment. `/api/legal/config` then advertises preview access so the draft acknowledgement UI and local free result can be exercised without PostgreSQL. No `/api/legal/consent` call is made, no consent token is created, the Cogniva analytics option is hidden, and both the client and server prevent new checkout creation. Webflow-wide analytics/session replay must be disabled or separately assessed on the host page. Keep provider secrets empty in preview where practical. Change the mode to `production` only as part of the approved go-live checklist; an invalid or missing value fails closed as `disabled`.
+
+Do not switch a service that has outstanding production Stripe Checkout Sessions into preview and assume they have disappeared: already-created provider URLs can remain payable and fulfillment intentionally continues for previously paid orders. Use a clean staging environment/test Stripe account, or expire and reconcile outstanding sessions before changing modes.
 
 ## Stripe setup
 

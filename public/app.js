@@ -4,7 +4,7 @@
   if (window.COGNIVA_COMPASS_APP_LOADED) return;
   window.COGNIVA_COMPASS_APP_LOADED = true;
 
-  var VERSION = "20260731-legal-commerce-v4";
+  var VERSION = "20260806-prelaunch-preview-v2";
   var appScript = document.currentScript;
   var assetBase = appScript && appScript.src ? new URL(".", appScript.src) : new URL("/", window.location.href);
   var serviceOrigin = assetBase.origin;
@@ -30,6 +30,19 @@
     pl: "Polski",
     pt: "Português",
     fr: "Français"
+  };
+  var PREVIEW_NOTICE = {
+    hu: "ELŐNÉZET · Még nem nyilvános. Az ingyenes önreflexió ebben a böngészőben marad; a válaszokat és az eredményeket nem küldjük el a Cogniva részére, a fizetés és az e-mailes kézbesítés pedig ki van kapcsolva.",
+    en: "PREVIEW · Not live. The free reflection stays in this browser; no answers or results are sent to Cogniva, and payment and email delivery are disabled.",
+    de: "VORSCHAU · Noch nicht veröffentlicht. Die kostenlose Reflexion bleibt in diesem Browser; Antworten und Ergebnisse werden nicht an Cogniva übermittelt, und Zahlung sowie E-Mail-Versand sind deaktiviert.",
+    it: "ANTEPRIMA · Non ancora online. La riflessione gratuita resta in questo browser; né le risposte né i risultati vengono inviati a Cogniva, e il pagamento e l’invio via email sono disattivati.",
+    es: "VISTA PREVIA · Aún no está publicado. La reflexión gratuita permanece en este navegador; no se envían respuestas ni resultados a Cogniva, y el pago y el envío por correo electrónico están desactivados.",
+    zh: "预览 · 尚未上线。免费反思内容仅保留在此浏览器中；任何回答或结果均不会发送至 Cogniva，付款和电子邮件发送功能已停用。",
+    ja: "プレビュー · 公開されていません。無料の振り返り内容はこのブラウザ内にのみ保存され、回答や結果がCognivaに送信されることはありません。決済とメール送信機能は無効です。",
+    ar: "معاينة · غير منشور. يبقى محتوى التأمل المجاني في هذا المتصفح؛ ولا تُرسل أي إجابات أو نتائج إلى Cogniva، كما أن الدفع والتسليم عبر البريد الإلكتروني معطّلان.",
+    pl: "PODGLĄD · Wersja nie jest opublikowana. Bezpłatna refleksja pozostaje w tej przeglądarce; żadne odpowiedzi ani wyniki nie są wysyłane do Cognivy, a płatności i wysyłka wiadomości e-mail są wyłączone.",
+    pt: "PRÉ-VISUALIZAÇÃO · Ainda não está disponível publicamente. A reflexão gratuita permanece neste navegador; respostas e resultados não são enviados para a Cogniva, e o pagamento e o envio por e-mail estão desativados.",
+    fr: "APERÇU · Non publié. La réflexion gratuite reste dans ce navigateur ; aucune réponse ni aucun résultat ne sont transmis à Cogniva, et le paiement ainsi que l’envoi par e-mail sont désactivés."
   };
   var EMAIL_CONFIRM_COPY = {
     en: { label: "Re-enter email address", mismatch: "The two email addresses must match." },
@@ -449,6 +462,7 @@
 
   var app;
   var footer;
+  var previewBanner;
   var modal;
   var legalModal;
   var languageTrigger;
@@ -472,6 +486,7 @@
   var legalGateResolve = null;
   var legalGatePromise = null;
   var legalGateStep = 1;
+  var previewAcknowledgement = null;
 
   function copy() {
     return I18N[language];
@@ -493,6 +508,7 @@
           '<span class="cc-language-code"></span><span class="cc-language-name"></span><span class="cc-chevron" aria-hidden="true"></span>',
         '</button>',
       '</header>',
+      '<p class="cc-preview-banner" role="status" hidden></p>',
       '<main class="cc-main" id="ccApp" tabindex="-1"></main>',
       '<footer class="cc-footer"></footer>',
       '<div class="cc-language-modal" id="ccLanguageModal" role="dialog" aria-modal="true" aria-labelledby="ccLanguageTitle" hidden>',
@@ -508,6 +524,7 @@
 
     app = root.querySelector("#ccApp");
     footer = root.querySelector(".cc-footer");
+    previewBanner = root.querySelector(".cc-preview-banner");
     modal = root.querySelector("#ccLanguageModal");
     legalModal = root.querySelector("#ccLegalModal");
     languageTrigger = root.querySelector(".cc-language-trigger");
@@ -538,6 +555,7 @@
     modal.querySelectorAll("[data-language]").forEach(function (button) {
       button.addEventListener("click", function () { selectLanguage(button.dataset.language); });
     });
+    applyAssessmentAccessUi(publicConfig);
     renderFooter(publicConfig);
   }
 
@@ -548,7 +566,7 @@
   }
 
   function setModalBackgroundDisabled(disabled, languageDialogOpen) {
-    [root.querySelector(".cc-skip-link"), root.querySelector(".cc-header"), app, footer].forEach(function (element) {
+    [root.querySelector(".cc-skip-link"), root.querySelector(".cc-header"), previewBanner, app, footer].forEach(function (element) {
       if (!element) return;
       if (disabled) {
         element.setAttribute("inert", "");
@@ -634,6 +652,25 @@
     return bundle.get(language);
   }
 
+  function previewAssessmentReady(config) {
+    return Boolean(config && config.assessmentMode === "preview" && config.assessmentReady === true);
+  }
+
+  function currentPreviewAcknowledgement(config) {
+    var bundle = legalBundle();
+    if (!previewAssessmentReady(config) || !bundle || bundle.isProductionReady === true || !previewAcknowledgement) return null;
+    return previewAcknowledgement.locale === language && previewAcknowledgement.contentVersion === bundle.version
+      ? previewAcknowledgement
+      : null;
+  }
+
+  function applyAssessmentAccessUi(config) {
+    if (!previewBanner) return;
+    var preview = previewAssessmentReady(config);
+    previewBanner.hidden = !preview;
+    previewBanner.textContent = preview ? PREVIEW_NOTICE[language] : "";
+  }
+
   function decodeConsentTokenRecord(token) {
     try {
       var body = String(token || "").split(".");
@@ -671,7 +708,8 @@
         bundle && bundle.isProductionReady === true && legalLocaleContent() &&
         receipt.contentVersion === bundle.version && record.contentVersion === bundle.version &&
         config.legalContentVersion === bundle.version &&
-        config && config.legalReady === true && receipt.policyVersion === config.policyVersion &&
+        config && config.assessmentMode === "production" && config.assessmentReady === true &&
+        config.legalReady === true && receipt.policyVersion === config.policyVersion &&
         legalDocumentsMatch(record.documents, config) && legalDocumentsMatch(receipt.documents, config);
       if (!valid) {
         safeSessionRemove(PREASSESSMENT_CONSENT_KEY);
@@ -838,7 +876,7 @@
       '<form class="cc-legal-form" novalidate><p class="cc-legal-help">' + escapeHtml(legal.ui.readBeforeContinuing) + '</p>',
         legalCheckHtml("privacyAcknowledged", legal.privacy.checks.privacyNoticeAcknowledged, true, legal),
         legalCheckHtml("specialCategoryConsent", legal.privacy.checks.specialCategoryExplicitConsent, true, legal),
-        legalCheckHtml("analyticsConsent", legal.privacy.optional.analyticsConsent, false, legal),
+        (previewAssessmentReady(config) ? "" : legalCheckHtml("analyticsConsent", legal.privacy.optional.analyticsConsent, false, legal)),
         '<div class="cc-legal-note"><p>' + escapeHtml(legal.privacy.withdrawal) + '</p><p>' + escapeHtml(legal.privacy.checkoutSeparate) + '</p></div>',
         (privacyUrl ? '<a class="cc-legal-document-link" href="' + escapeHtml(privacyUrl) + '" target="_blank" rel="noopener">' + escapeHtml(legal.ui.openPrivacy) + '</a>' : ""),
         '<p class="cc-legal-error" role="alert" tabindex="-1" hidden></p>',
@@ -851,6 +889,15 @@
     form.addEventListener("submit", async function (event) {
       event.preventDefault();
       if (!setLegalValidation(form, legal.ui.validationMessage)) return;
+      if (previewAssessmentReady(config)) {
+        previewAcknowledgement = Object.freeze({
+          preview: true,
+          locale: language,
+          contentVersion: legalBundle().version
+        });
+        closeLegalGate(previewAcknowledgement);
+        return;
+      }
       var submit = form.querySelector('[type="submit"]');
       var back = form.querySelector("[data-legal-back]");
       var errorBox = form.querySelector(".cc-legal-error");
@@ -898,7 +945,11 @@
     if (legalGatePromise) return legalGatePromise;
     var legal = legalLocaleContent();
     legalGatePromise = new Promise(function (resolve) { legalGateResolve = resolve; });
-    var ready = config && config.legalReady === true && legal && legalBundle() && legalBundle().isProductionReady === true;
+    var bundle = legalBundle();
+    var productionReady = config && config.assessmentMode === "production" && config.assessmentReady === true &&
+      config.legalReady === true && legal && bundle && bundle.isProductionReady === true;
+    var previewReady = previewAssessmentReady(config) && legal && bundle && bundle.isProductionReady !== true;
+    var ready = productionReady || previewReady;
     if (ready) renderLegalTerms(legal, config);
     else renderLegalUnavailable(legal);
     showLegalDialog();
@@ -907,6 +958,8 @@
 
   async function ensurePreassessmentConsent() {
     var config = await loadPublicConfig();
+    var preview = currentPreviewAcknowledgement(config);
+    if (preview) return preview;
     var stored = validStoredConsent(config);
     if (stored) return stored;
     return openLegalGate(config);
@@ -949,6 +1002,7 @@
     if (hasProgress() && !window.confirm(copy().leaveWarning)) return;
     if (view === "quiz") abandonCurrent();
     language = normalized;
+    previewAcknowledgement = null;
     safeSessionRemove(PREASSESSMENT_CONSENT_KEY);
     safeStorageSet("cc_lang", language);
     updateLanguageUrl();
@@ -1209,6 +1263,8 @@
     }).filter(Boolean) : [];
     return {
       commerceReady: source.commerceReady === true,
+      assessmentMode: ["disabled", "preview", "production"].indexOf(String(source.assessmentMode || "")) === -1 ? "disabled" : String(source.assessmentMode),
+      assessmentReady: source.assessmentReady === true,
       legalReady: source.legalReady === true,
       products: products,
       aiReportAvailable: source.aiReportAvailable === true,
@@ -1253,10 +1309,12 @@
           publicConfig = normalizeConfig(Object.assign({}, commerceData, legalData));
           if (!responses[0].ok) publicConfig.commerceReady = false;
           if (!responses[1].ok) publicConfig.legalReady = false;
+          applyAssessmentAccessUi(publicConfig);
           return publicConfig;
         })
         .catch(function () {
           publicConfig = normalizeConfig({});
+          applyAssessmentAccessUi(publicConfig);
           return publicConfig;
         });
     }
@@ -1276,7 +1334,7 @@
     var singlePrice = formattedProductPrice(singleProduct);
     var bundlePrice = formattedProductPrice(bundleProduct);
     var bundleComplete = Boolean(completedAssessments.cognitive && completedAssessments.emotional);
-    if (!config.commerceReady || !config.legalReady || !singleProduct || !bundleProduct || !singlePrice || !bundlePrice || !config.privacyUrl || !config.termsUrl || !config.policyVersion) {
+    if (previewAssessmentReady(config) || !config.commerceReady || !config.legalReady || !singleProduct || !bundleProduct || !singlePrice || !bundlePrice || !config.privacyUrl || !config.termsUrl || !config.policyVersion) {
       offer.innerHTML = '<h2>' + c.reportTitle + '</h2><p>' + c.reportLead + '</p><p class="cc-report-unavailable" role="status">' + c.notAvailable + '</p>';
       return;
     }
@@ -1336,6 +1394,11 @@
     var form = event.currentTarget;
     var submit = form.querySelector('[type="submit"]');
     var errorBox = form.querySelector(".cc-checkout-error");
+    if (previewAssessmentReady(config)) {
+      errorBox.textContent = copy().notAvailable;
+      errorBox.hidden = false;
+      return;
+    }
     var email = String(form.elements.email.value || "").trim();
     var confirmEmail = String(form.elements.confirmEmail.value || "").trim();
     form.elements.confirmEmail.setCustomValidity(email.toLowerCase() === confirmEmail.toLowerCase() ? "" : EMAIL_CONFIRM_COPY[language].mismatch);

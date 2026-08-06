@@ -4,6 +4,7 @@ import fs from "node:fs";
 import vm from "node:vm";
 
 Object.assign(process.env, {
+  ASSESSMENT_ACCESS_MODE: "production",
   PRIVACY_URL: "https://example.test/privacy",
   TERMS_URL: "https://example.test/terms",
   CONTACT_URL: "https://example.test/contact",

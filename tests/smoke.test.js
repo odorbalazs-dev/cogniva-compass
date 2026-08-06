@@ -16,6 +16,13 @@ function localizedCopy() {
   return vm.runInNewContext(`(${app.slice(start, end)})`);
 }
 
+function localizedPreviewCopy() {
+  const start = app.indexOf("var PREVIEW_NOTICE = ") + "var PREVIEW_NOTICE = ".length;
+  const end = app.indexOf("\n  };\n  var EMAIL_CONFIRM_COPY", start) + 4;
+  assert.ok(start > 10 && end > start, "localized preview copy should be discoverable");
+  return vm.runInNewContext(`(${app.slice(start, end)})`);
+}
+
 test("all eleven languages have the complete UI and domain schema", () => {
   const locales = localizedCopy();
   const languages = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
@@ -29,6 +36,16 @@ test("all eleven languages have the complete UI and domain schema", () => {
       assert.equal(typeof value, "string", `${language}.${key}`);
       assert.ok(value.trim(), `${language}.${key} must not be empty`);
     }
+  }
+});
+
+test("preview status is complete in all eleven languages without fallback", () => {
+  const notices = localizedPreviewCopy();
+  const languages = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
+  assert.deepEqual(Object.keys(notices).sort(), languages.sort());
+  for (const language of languages) {
+    assert.equal(typeof notices[language], "string", language);
+    assert.ok(notices[language].trim(), `${language} preview status must not be empty`);
   }
 });
 
@@ -95,16 +112,22 @@ test("paid report checkout uses the documented consent and server-verifiable pay
   assert.doesNotMatch(app, /\$\s*\d|€\s*\d|\d[.,]\d{2}\s*(USD|EUR)/);
 });
 
-test("assessment start is gated by localized, fail-closed consent", () => {
+test("production start stays fail-closed while explicit preview remains browser-only", () => {
   for (const marker of [
     "/api/legal/config", "/api/legal/consent", "adultConfirmed",
     "ownResponsesConfirmed", "nonDiagnosticAccepted", "termsAccepted",
     "privacyAcknowledged", "specialCategoryConsent", "analyticsConsent"
   ]) assert.ok(app.includes(marker), `${marker} should be present`);
-  assert.match(app, /legalBundle\(\)\.isProductionReady === true/);
+  assert.match(app, /config\.assessmentMode === "production"/);
+  assert.match(app, /previewAssessmentReady\(config\)/);
+  assert.match(app, /previewAcknowledgement = Object\.freeze/);
+  assert.match(app, /previewAssessmentReady\(config\) \? "" : legalCheckHtml\("analyticsConsent"/);
   assert.match(app, /legalDocumentsMatch\(record\.documents, config\)/);
   assert.match(app, /receipt\.contentVersion === bundle\.version/);
   assert.match(legalContent, /isProductionReady:\s*false/);
+  const previewBranch = app.indexOf("if (previewAssessmentReady(config)) {", app.indexOf("function renderLegalPrivacy"));
+  const consentPost = app.indexOf('fetch(apiUrl("/api/legal/consent")', previewBranch);
+  assert.ok(previewBranch > -1 && consentPost > previewBranch, "preview must return before the consent POST");
   assert.ok(loader.indexOf('addScript("/legal-content.js?v="') < loader.indexOf('addScript("/app.js?v="'));
 });
 
@@ -125,4 +148,10 @@ test("Webflow embeds only the independent, versioned Cogniva loader", () => {
   assert.match(loader, /\/app\.js\?v=/);
   assert.match(loader, /Promise\.all\(\[/);
   assert.doesNotMatch(loader, /cogniva-banks|selection-engine|result-model|result-insights/);
+  const appVersion = app.match(/var VERSION = "([^"]+)"/)[1];
+  const loaderVersion = loader.match(/var VERSION = "([^"]+)"/)[1];
+  const embedVersion = embed.match(/webflow-loader\.js\?v=([^"<]+)/)[1];
+  assert.equal(loaderVersion, appVersion);
+  assert.equal(embedVersion, appVersion);
+  for (const match of index.matchAll(/[?&]v=([^"&]+)/g)) assert.equal(match[1], appVersion);
 });

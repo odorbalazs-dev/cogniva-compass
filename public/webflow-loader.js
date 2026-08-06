@@ -4,7 +4,7 @@
   if (window.COGNIVA_COMPASS_WEBFLOW_LOADED) return;
   window.COGNIVA_COMPASS_WEBFLOW_LOADED = true;
 
-  var VERSION = "20260731-legal-commerce-v4";
+  var VERSION = "20260806-prelaunch-preview-v2";
   var BASE_URL = "https://cogniva-compass-production.up.railway.app";
   var loaderScript = document.currentScript;
   var LANGUAGES = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];

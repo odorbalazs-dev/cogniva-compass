@@ -58,7 +58,9 @@ test("Resend request errors are 4xx while operational errors remain retryable 5x
 
 test("public legal readiness includes durable receipt storage", () => {
   const server = fs.readFileSync(new URL("../src/server.js", import.meta.url), "utf8");
-  assert.match(server, /legalReady:\s*legal\.legalReady\s*&&\s*hasDatabase\(\)/);
+  assert.match(server, /const productionLegalReady = legal\.legalReady && hasDatabase\(\)/);
+  assert.match(server, /legalReady:\s*productionLegalReady/);
+  assert.match(server, /legal\.assessmentMode === "preview"/);
   assert.match(server, /legalStorageReady:\s*hasDatabase\(\)/);
 });
 

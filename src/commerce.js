@@ -987,7 +987,7 @@ export async function publicCommerceConfig() {
       assessmentCount: product.assessmentCount,
       requiredTracks: product.requiredTracks
     }))),
-    aiReportAvailable: ai.ready,
+    aiReportAvailable: commerceReady && ai.ready,
     policyVersion: config.policyVersion,
     privacyUrl: config.privacyUrl || null,
     termsUrl: config.termsUrl || null,

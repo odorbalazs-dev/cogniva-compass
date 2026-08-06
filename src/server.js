@@ -300,10 +300,14 @@ async function persistPreassessmentConsent({ token, record }) {
 app.get("/api/legal/config", (_req, res) => {
   res.setHeader("Cache-Control", "no-store");
   const legal = publicLegalConfig();
+  const productionLegalReady = legal.legalReady && hasDatabase();
+  const assessmentReady = legal.assessmentMode === "preview" ||
+    (legal.assessmentMode === "production" && productionLegalReady);
   return res.status(200).json({
     ok: true,
     ...legal,
-    legalReady: legal.legalReady && hasDatabase(),
+    assessmentReady,
+    legalReady: productionLegalReady,
     legalStorageReady: hasDatabase()
   });
 });
@@ -454,15 +458,20 @@ app.get("/internal/admin/v1/snapshot", async (req, res) => {
 app.get("/health", (_, res) => {
   const legal = legalReadiness();
   const adminIntegration = adminIntegrationReadiness();
+  const productionLegalReady = legal.ready && hasDatabase();
+  const assessmentReady = config.assessmentAccessMode === "preview" ||
+    (config.assessmentAccessMode === "production" && productionLegalReady);
   res.setHeader("Cache-Control", "no-store");
   res.json({
     ok: true,
     service: "cogniva-compass",
     version: "2.0.0",
     databaseConfigured: hasDatabase(),
+    assessmentMode: config.assessmentAccessMode,
+    assessmentReady,
     commerceConfigured: commerceReadiness().ready,
     legalConfigured: legal.ready,
-    legalConsentReady: legal.ready && hasDatabase(),
+    legalConsentReady: config.assessmentAccessMode === "production" && productionLegalReady,
     adminIntegrationConfigured: adminIntegration.ready
   });
 });

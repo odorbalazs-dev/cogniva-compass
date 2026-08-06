@@ -24,6 +24,12 @@ function safeEqual(left, right) {
 }
 
 function requireLegalReady() {
+  if (config.assessmentAccessMode !== "production") {
+    const error = new Error("Production assessment access is disabled.");
+    error.status = 503;
+    error.code = "ASSESSMENT_ACCESS_DISABLED";
+    throw error;
+  }
   const readiness = legalReadiness();
   if (readiness.ready) return;
   const error = new Error("Legal information is not ready for assessment use.");
@@ -45,6 +51,7 @@ function currentDocuments() {
 export function publicLegalConfig() {
   const readiness = legalReadiness();
   return Object.freeze({
+    assessmentMode: config.assessmentAccessMode,
     legalReady: readiness.ready,
     legalContentVersion: config.legalContentVersion,
     policyVersion: config.policyVersion,
